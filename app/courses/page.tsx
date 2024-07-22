@@ -1,9 +1,8 @@
 "use client";
-
-import { useGetUsersAllCoursesQuery } from "../../redux/features/courses/coursesApi";
-import { useGetHeroDataQuery } from "../../redux/features/layout/layoutApi";
+import { useGetUsersAllCoursesQuery } from "@/redux/features/courses/coursesApi";
+import { useGetHeroDataQuery } from "@/redux/features/layout/layoutApi";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "../components/Loader/Loader";
 import Header from "../components/Header";
 import Heading from "../utils/Heading";
@@ -13,7 +12,7 @@ import Footer from "../components/Footer";
 
 type Props = {};
 
-const CoursesComponent = () => {
+const Page = (props: Props) => {
   const searchParams = useSearchParams();
   const search = searchParams?.get("title");
   const { data, isLoading } = useGetUsersAllCoursesQuery(undefined, {});
@@ -44,7 +43,7 @@ const CoursesComponent = () => {
   const categories = categoriesData?.layout?.categories;
 
   return (
-    <>
+    <div>
       {isLoading ? (
         <Loader />
       ) : (
@@ -111,15 +110,7 @@ const CoursesComponent = () => {
           <Footer />
         </>
       )}
-    </>
-  );
-};
-
-const Page = (props: Props) => {
-  return (
-    <Suspense fallback={<Loader />}>
-      <CoursesComponent />
-    </Suspense>
+    </div>
   );
 };
 
