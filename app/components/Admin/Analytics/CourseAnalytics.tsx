@@ -17,16 +17,6 @@ type Props = {};
 const CourseAnalytics = (props: Props) => {
   const { data, isLoading } = useGetCoursesAnalyticsQuery({});
 
-  // const analyticsData = [
-  //     { name: 'Jun 2023', uv: 3 },
-  //     { name: 'July 2023', uv: 2 },
-  //     { name: 'August 2023', uv: 5 },
-  //     { name: 'Sept 2023', uv: 7 },
-  //     { name: 'October 2023', uv: 2 },
-  //     { name: 'Nov 2023', uv: 5 },
-  //     { name: 'December 2023', uv: 7 },
-  //   ];
-
   const analyticsData: any = [];
 
   data &&
@@ -44,10 +34,10 @@ const CourseAnalytics = (props: Props) => {
         <div className="h-screen">
           <div className="mt-[50px]">
             <h1 className={`${styles.title} px-5 !text-start`}>
-              Courses Analytics
+              Análise de Cursos
             </h1>
             <p className={`${styles.label} px-5`}>
-              Last 12 months analytics data{" "}
+              Dados de análise dos últimos 12 meses
             </p>
           </div>
 
