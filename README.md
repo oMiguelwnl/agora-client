@@ -6,6 +6,24 @@
 
 **Nota:** [Visualização Ao Vivo](https://agora-client-azure.vercel.app/) disponível para visualização.
 
+## 📸 Imagens do Projeto
+
+<img src="https://private-user-images.githubusercontent.com/134077780/352152347-a6c22ca6-c710-498c-988a-2f087e70073e.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjE5MTgxODUsIm5iZiI6MTcyMTkxNzg4NSwicGF0aCI6Ii8xMzQwNzc3ODAvMzUyMTUyMzQ3LWE2YzIyY2E2LWM3MTAtNDk4Yy05ODhhLTJmMDg3ZTcwMDczZS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNzI1JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDcyNVQxNDMxMjVaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0zMzNlNzI0YWM3YWZjMTE2MzI0MjBmZTIxMjI0ZjM4MmUyYmQ4ZjhjNzEzODM1ZDU3YWRjODk0ODljNmNkNDY5JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.JkfIw6tcY8iGcsGbBZ90FumMwavgc6yhaL-_x08JmUU" width="600" height="1300" alt="Página Home">
+
+_Exemplo da Página Home_
+
+<img src="https://private-user-images.githubusercontent.com/134077780/351864416-a3516340-8393-4c0f-9f6b-701c125956fe.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjE4NTE2NzAsIm5iZiI6MTcyMTg1MTM3MCwicGF0aCI6Ii8xMzQwNzc3ODAvMzUxODY0NDE2LWEzNTE2MzQwLTgzOTMtNGMwZi05ZjZiLTcwMWMxMjU5NTZmZS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNzI0JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDcyNFQyMDAyNTBaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT00NTQyNmE4ZDFiZTU0M2M0YzdmZTA0NjJjZTJlZmEwMjlkNWY4ODIyZjYyM2Q1OTZlZTc1ZDAyZDZiNDRlMzE5JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.mTIou8VG96-NbwmAL1eEaqO4EmxgIGFjVVj2Jm-3TPw" width="600" height="400" alt="Página Dashboard">
+
+_Exemplo da Página Dashboard_
+
+<img src="https://private-user-images.githubusercontent.com/134077780/351869840-7bd0a3f0-c9c5-4be2-8f30-f54c7b25f4a9.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjE4NTI5MjMsIm5iZiI6MTcyMTg1MjYyMywicGF0aCI6Ii8xMzQwNzc3ODAvMzUxODY5ODQwLTdiZDBhM2YwLWM5YzUtNGJlMi04ZjMwLWY1NGM3YjI1ZjRhOS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNzI0JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDcyNFQyMDIzNDNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1hOTBkNzM2NDMzM2NhYmRmZWQ1ZDhhYWE2MTI0ZGRjMTRlNGQ4NjZkZjU2MTNmYTlmYTVkYTdiZTRjMTI1ZjRlJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.ILKGoorv9A8zfEqF0Gf5iac6s-67bGB8fQRKB4za5GA" width="600" height="700" alt="Página de Compras do Curso">
+
+_Exemplo da Página de Compras do Curso_
+
+<img src="https://private-user-images.githubusercontent.com/134077780/351870162-353565ac-fc3f-48f1-ae1a-4c0ad0e3ef8e.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjE5MTY4OTQsIm5iZiI6MTcyMTkxNjU5NCwicGF0aCI6Ii8xMzQwNzc3ODAvMzUxODcwMTYyLTM1MzU2NWFjLWZjM2YtNDhmMS1hZTFhLTRjMGFkMGUzZWY4ZS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNzI1JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDcyNVQxNDA5NTRaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0yZjlmMGM1ZWZjZThiNjRiZDFiZGE5Yjc0Yzc1NTdiZDBmMWQyODNiOGUwMGJkNzM4NGEzOTY0MmJmNmRiMTBhJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.fVJODTAnvKsfUG-Iy5t5lKAAnu63XzU80ea_RacJqJw" width="600" height="400" alt="Página do Curso">
+
+_Exemplo da Página para Alunos que Compraram o Curso_
+
 ## 🔨 Funcionalidades Principais
 
 1. **Autenticação e Usuário**
@@ -63,8 +81,8 @@
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/yourusername/agora-backend.git
-   cd agora-backend
+   git clone https://github.com/oMiguelwnl/server.git
+   cd server
    ```
 2. Instale as dependências:
    ```bash
@@ -73,7 +91,7 @@
 3. Crie um arquivo `.env` e adicione suas variáveis de ambiente:
    ```env
    PORT=8000
-   ORIGIN=http://localhost:3000,https://agora-client-azure.vercel.app
+   ORIGIN=http://localhost:3000,
    ```
 4. Inicie o servidor:
    ```bash
@@ -84,7 +102,7 @@
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/yourusername/agora-frontend.git
+   git clone https://github.com/oMiguelwnl/agora-client.git
    cd agora-frontend
    ```
 2. Instale as dependências:
