@@ -46,8 +46,7 @@ const Hero: FC<Props> = (props) => {
             </h2>
             <br />
             <p className="dark:text-[#edfff4] text-[#000000ac] font-Josefin font-[600] text-[18px] 1500px:!w-[55%] 1100px:!w-[78%]">
-              {data?.layout?.banner?.subTitle ||
-                "Descubra os melhores cursos para você"}
+              {data?.layout?.banner?.subTitle }
             </p>
             <br />
             <br />
