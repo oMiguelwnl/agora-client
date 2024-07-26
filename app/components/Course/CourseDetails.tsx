@@ -1,435 +1,296 @@
 import { styles } from "@/app/styles/style";
 import CoursePlayer from "@/app/utils/CoursePlayer";
-import {
-  useAddAnswerInQuestionMutation,
-  useAddNewQuestionMutation,
-  useAddReplyInReviewMutation,
-  useAddReviewInCourseMutation,
-  useGetCourseDetailsQuery,
-} from "@/redux/features/courses/coursesApi";
-import Image from "next/image";
-import { format } from "timeago.js";
-import React, { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
-import {
-  AiFillStar,
-  AiOutlineArrowLeft,
-  AiOutlineArrowRight,
-  AiOutlineStar,
-} from "react-icons/ai";
-import { BiMessage } from "react-icons/bi";
-import { VscVerifiedFilled } from "react-icons/vsc";
 import Ratings from "@/app/utils/Ratings";
-import socketIO from "socket.io-client";
-const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URL || "";
-const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { IoCheckmarkDoneOutline, IoCloseOutline } from "react-icons/io5";
+import { format } from "timeago.js";
+import CourseContentList from "../Course/CourseContentList";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckOutForm from "../Payment/CheckOutForm";
+import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import Image from "next/image";
+import { VscVerifiedFilled } from "react-icons/vsc";
 
 type Props = {
   data: any;
-  id: string;
-  activeVideo: number;
-  setActiveVideo: (activeVideo: number) => void;
-  user: any;
-  refetch: any;
+  stripePromise: any;
+  clientSecret: string;
+  setRoute: any;
+  setOpen: any;
 };
 
-const CourseContentMedia = ({
+const CourseDetails = ({
   data,
-  id,
-  activeVideo,
-  setActiveVideo,
-  user,
-  refetch,
+  stripePromise,
+  clientSecret,
+  setRoute,
+  setOpen: openAuthModal,
 }: Props) => {
-  const [activeBar, setActiveBar] = useState(0);
-  const [question, setQuestion] = useState("");
-  const [review, setReview] = useState("");
-  const [rating, setRating] = useState(1);
-  const [answer, setAnswer] = useState("");
-  const [questionId, setQuestionId] = useState("");
-  const [reply, setReply] = useState("");
-  const [reviewId, setReviewId] = useState("");
-  const [isReviewReply, setIsReviewReply] = useState(false);
-
-  const [
-    addNewQuestion,
-    { isSuccess, error, isLoading: questionCreationLoading },
-  ] = useAddNewQuestionMutation();
-  const { data: courseData, refetch: courseRefetch } = useGetCourseDetailsQuery(
-    id,
-    { refetchOnMountOrArgChange: true }
-  );
-  const [
-    addAnswerInQuestion,
-    {
-      isSuccess: answerSuccess,
-      error: answerError,
-      isLoading: answerCreationLoading,
-    },
-  ] = useAddAnswerInQuestionMutation();
-  const course = courseData?.course;
-  const [
-    addReviewInCourse,
-    {
-      isSuccess: reviewSuccess,
-      error: reviewError,
-      isLoading: reviewCreationLoading,
-    },
-  ] = useAddReviewInCourseMutation();
-
-  const [
-    addReplyInReview,
-    {
-      isSuccess: replySuccess,
-      error: replyError,
-      isLoading: replyCreationLoading,
-    },
-  ] = useAddReplyInReviewMutation();
-
-  const isReviewExists = course?.reviews?.find(
-    (item: any) => item.user._id === user._id
-  );
-
-  const handleQuestion = () => {
-    if (question.length === 0) {
-      toast.error("A pergunta não pode estar vazia");
-    } else {
-      addNewQuestion({
-        question,
-        courseId: id,
-        contentId: data[activeVideo]._id,
-      });
-    }
-  };
+  const { data: userData, refetch } = useLoadUserQuery(undefined, {});
+  const [user, setUser] = useState<any>();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (isSuccess) {
-      setQuestion("");
-      refetch();
-      socketId.emit("notification", {
-        title: `Nova Pergunta Recebida`,
-        message: `Você tem uma nova pergunta em ${data[activeVideo].title}`,
-        userId: user._id,
-      });
-    }
-    if (answerSuccess) {
-      setAnswer("");
-      refetch();
-      if (user.role !== "admin") {
-        socketId.emit("notification", {
-          title: `Nova Resposta Recebida`,
-          message: `Você tem uma nova resposta em ${data[activeVideo].title}`,
-          userId: user._id,
-        });
-      }
-    }
-    if (error) {
-      if ("data" in error) {
-        const errorMessage = error as any;
-        toast.error(errorMessage.data.message);
-      }
-    }
-    if (answerError) {
-      if ("data" in answerError) {
-        const errorMessage = answerError as any;
-        toast.error(errorMessage.data.message);
-      }
-    }
-    if (reviewSuccess) {
-      setReview("");
-      setRating(1);
-      courseRefetch();
-      socketId.emit("notification", {
-        title: `Nova Avaliação Recebida`,
-        message: `Você tem uma nova avaliação em ${data[activeVideo].title}`,
-        userId: user._id,
-      });
-    }
-    if (reviewError) {
-      if ("data" in reviewError) {
-        const errorMessage = reviewError as any;
-        toast.error(errorMessage.data.message);
-      }
-    }
-    if (replySuccess) {
-      setReply("");
-      courseRefetch();
-    }
-    if (replyError) {
-      if ("data" in replyError) {
-        const errorMessage = replyError as any;
-        toast.error(errorMessage.data.message);
-      }
-    }
-  }, [
-    isSuccess,
-    error,
-    answerSuccess,
-    answerError,
-    reviewSuccess,
-    reviewError,
-    replySuccess,
-    replyError,
-  ]);
+    setUser(userData?.user);
+  }, [userData]);
 
-  const handleAnswerSubmit = () => {
-    addAnswerInQuestion({
-      answer,
-      courseId: id,
-      contentId: data[activeVideo]._id,
-      questionId: questionId,
-    });
-  };
+  const dicountPercentage =
+    ((data?.estimatedPrice - data.price) / data?.estimatedPrice) * 100;
 
-  const handleReviewSubmit = async () => {
-    if (review.length === 0) {
-      toast.error("A avaliação não pode estar vazia");
+  const discountPercentagePrice = dicountPercentage.toFixed(0);
+
+  const isPurchased =
+    user && user?.courses?.find((item: any) => item._id === data._id);
+
+  const handleOrder = (e: any) => {
+    if (user) {
+      setOpen(true);
     } else {
-      addReviewInCourse({ review, rating, courseId: id });
-    }
-  };
-
-  const handleReviewReplySubmit = () => {
-    if (!replyCreationLoading) {
-      if (reply === "") {
-        toast.error("A resposta não pode estar vazia");
-      } else {
-        addReplyInReview({ comment: reply, courseId: id, reviewId });
-      }
+      setRoute("Login");
+      openAuthModal(true);
     }
   };
 
   return (
-    <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
-      <CoursePlayer
-        title={data[activeVideo]?.title}
-        videoUrl={data[activeVideo]?.videoUrl}
-      />
-      <div className="w-full flex items-center justify-between my-3">
-        <div
-          className={`${
-            styles.button
-          } text-white  !w-[unset] !min-h-[40px] !py-[unset] ${
-            activeVideo === 0 && "!cursor-no-drop opacity-[.8]"
-          }`}
-          onClick={() =>
-            setActiveVideo(activeVideo === 0 ? 0 : activeVideo - 1)
-          }
-        >
-          <AiOutlineArrowLeft className="mr-2" />
-          Aula Anterior
-        </div>
-        <div
-          className={`${
-            styles.button
-          } !w-[unset] text-white  !min-h-[40px] !py-[unset] ${
-            data.length - 1 === activeVideo && "!cursor-no-drop opacity-[.8]"
-          }`}
-          onClick={() =>
-            setActiveVideo(
-              data && data.length - 1 === activeVideo
-                ? activeVideo
-                : activeVideo + 1
-            )
-          }
-        >
-          Próxima Aula
-          <AiOutlineArrowRight className="ml-2" />
-        </div>
-      </div>
-      <h1 className="pt-2 text-[25px] font-[600] dark:text-white text-black ">
-        {data[activeVideo].title}
-      </h1>
-      <br />
-      <div className="w-full p-4 flex items-center justify-between bg-slate-500 bg-opacity-20 backdrop-blur shadow-[bg-slate-700] rounded shadow-inner">
-        {["Visão Geral", "Recursos", "Perguntas e Respostas", "Avaliações"].map(
-          (text, index) => (
-            <h5
-              key={index}
-              className={`800px:text-[20px] cursor-pointer ${
-                activeBar === index
-                  ? "text-red-500"
-                  : "dark:text-white text-black"
-              }`}
-              onClick={() => setActiveBar(index)}
-            >
-              {text}
-            </h5>
-          )
-        )}
-      </div>
-      <br />
-      {activeBar === 0 && (
-        <p className="text-[18px] whitespace-pre-line mb-3 dark:text-white text-black">
-          {data[activeVideo]?.description}
-        </p>
-      )}
-
-      {activeBar === 1 && (
-        <div>
-          {data[activeVideo]?.links.map((item: any, index: number) => (
-            <div className="mb-5" key={index}>
-              <h2 className="800px:text-[20px] 800px:inline-block dark:text-white text-black">
-                {item.title && item.title + " :"}
-              </h2>
-              <a
-                className="inline-block text-[#4395c4] 800px:text-[20px] 800px:pl-2"
-                href={item.url}
-              >
-                {item.url}
-              </a>
+    <div>
+      <div className="w-[90%] 800px:w-[90%] m-auto py-5">
+        <div className="w-full flex flex-col-reverse 800px:flex-row">
+          <div className="w-full 800px:w-[65%] 800px:pr-5">
+            <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
+              {data.name}
+            </h1>
+            <div className="flex items-center justify-between pt-3">
+              <div className="flex items-center">
+                <Ratings rating={data.ratings} />
+                <h5 className="text-black dark:text-white">
+                  {data.reviews?.length} Avaliações
+                </h5>
+              </div>
+              <h5 className="text-black dark:text-white">
+                {data.purchased} Alunos
+              </h5>
             </div>
-          ))}
-        </div>
-      )}
 
-      {activeBar === 2 && (
-        <div>
-          <h2 className="text-[25px] font-[600] dark:text-white text-black mb-2">
-            Perguntas
-          </h2>
-          <div>
-            <input
-              type="text"
-              placeholder="Digite sua pergunta..."
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              className="w-full py-2 px-4 rounded border border-gray-300 dark:bg-black dark:text-white"
-            />
-            <button
-              className={`${styles.button} py-2 px-4 mt-2`}
-              onClick={handleQuestion}
-            >
-              {questionCreationLoading ? "Enviando..." : "Enviar Pergunta"}
-            </button>
-          </div>
-
-          {course?.questions?.map((item: any, index: number) => (
-            <div
-              className="bg-gray-200 p-3 rounded my-2 dark:bg-gray-700 dark:text-white"
-              key={index}
-            >
-              <h5 className="font-semibold">Pergunta:</h5>
-              <p>{item?.question}</p>
-              {item?.answers?.map((ans: any, i: number) => (
+            <br />
+            <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
+              O que você vai aprender com este curso?
+            </h1>
+            <div>
+              {data.benefits?.map((item: any, index: number) => (
                 <div
-                  key={i}
-                  className="bg-gray-300 p-2 rounded my-2 dark:bg-gray-600"
+                  className="w-full flex 800px:items-center py-2"
+                  key={index}
                 >
-                  <h5 className="font-semibold">Resposta:</h5>
-                  <p>{ans?.answer}</p>
+                  <div className="w-[15px] mr-1">
+                    <IoCheckmarkDoneOutline
+                      size={20}
+                      className="text-black dark:text-white"
+                    />
+                  </div>
+                  <p className="pl-2 text-black dark:text-white">
+                    {item.title}
+                  </p>
                 </div>
               ))}
-              {user?._id && (
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Digite sua resposta..."
-                    value={answer}
-                    onChange={(e) => setAnswer(e.target.value)}
-                    className="w-full py-2 px-4 rounded border border-gray-300 dark:bg-black dark:text-white"
+              <br />
+              <br />
+            </div>
+            <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
+              Quais são os pré-requisitos para começar este curso?
+            </h1>
+            {data.prerequisites?.map((item: any, index: number) => (
+              <div className="w-full flex 800px:items-center py-2" key={index}>
+                <div className="w-[15px] mr-1">
+                  <IoCheckmarkDoneOutline
+                    size={20}
+                    className="text-black dark:text-white"
                   />
-                  <button
-                    className={`${styles.button} py-2 px-4 mt-2`}
-                    onClick={() => {
-                      setQuestionId(item._id);
-                      handleAnswerSubmit();
-                    }}
-                  >
-                    {answerCreationLoading
-                      ? "Enviando..."
-                      : "Responder Pergunta"}
-                  </button>
                 </div>
+                <p className="pl-2 text-black dark:text-white">{item.title}</p>
+              </div>
+            ))}
+            <br />
+            <br />
+            <div>
+              <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
+                Visão Geral do Curso
+              </h1>
+              <CourseContentList data={data?.courseData} isDemo={true} />
+            </div>
+            <br />
+            <br />
+            {/* course description */}
+            <div className="w-full">
+              <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
+                Detalhes do Curso
+              </h1>
+              <p className="text-[18px] mt-[20px] whitespace-pre-line w-full overflow-hidden text-black dark:text-white">
+                {data.description}
+              </p>
+            </div>
+            <br />
+            <br />
+            <div className="w-full">
+              <div className="800px:flex items-center">
+                <Ratings rating={data?.ratings} />
+                <div className="mb-2 800px:mb-[unset]" />
+                <h5 className="text-[25px] font-Poppins text-black dark:text-white">
+                  {Number.isInteger(data?.ratings)
+                    ? data?.ratings.toFixed(1)
+                    : data?.ratings.toFixed(2)}{" "}
+                  Avaliação do Curso • {data?.reviews?.length} Avaliações
+                </h5>
+              </div>
+              <br />
+              {(data?.reviews && [...data.reviews].reverse()).map(
+                (item: any, index: number) => (
+                  <div className="w-full pb-4" key={index}>
+                    <div className="flex">
+                      <div className="w-[50px] h-[50px]">
+                        <Image
+                          src={
+                            item.user.avatar
+                              ? item.user.avatar.url
+                              : "https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png"
+                          }
+                          width={50}
+                          height={50}
+                          alt=""
+                          className="w-[50px] h-[50px] rounded-full object-cover"
+                        />
+                      </div>
+                      <div className="hidden 800px:block pl-2">
+                        <div className="flex items-center">
+                          <h5 className="text-[18px] pr-2 text-black dark:text-white">
+                            {item.user.name}
+                          </h5>
+                          <Ratings rating={item.rating} />
+                        </div>
+                        <p className="text-black dark:text-white">
+                          {item.comment}
+                        </p>
+                        <small className="text-[#000000d1] dark:text-[#ffffff83]">
+                          {format(item.createdAt)} •
+                        </small>
+                      </div>
+                      <div className="pl-2 flex 800px:hidden items-center">
+                        <h5 className="text-[18px] pr-2 text-black dark:text-white">
+                          {item.user.name}
+                        </h5>
+                        <Ratings rating={item.rating} />
+                      </div>
+                    </div>
+                    {item.commentReplies.map((i: any, index: number) => (
+                      <div className="w-full flex 800px:ml-16 my-5" key={index}>
+                        <div className="w-[50px] h-[50px]">
+                          <Image
+                            src={
+                              i.user.avatar
+                                ? i.user.avatar.url
+                                : "https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png"
+                            }
+                            width={50}
+                            height={50}
+                            alt=""
+                            className="w-[50px] h-[50px] rounded-full object-cover"
+                          />
+                        </div>
+                        <div className="pl-2">
+                          <div className="flex items-center">
+                            <h5 className="text-[20px]">{i.user.name}</h5>{" "}
+                            <VscVerifiedFilled className="text-[#0095F6] ml-2 text-[20px]" />
+                          </div>
+                          <p>{i.comment}</p>
+                          <small className="text-[#ffffff83]">
+                            {format(i.createdAt)} •
+                          </small>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )
               )}
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+          <div className="w-full 800px:w-[35%] relative">
+            <div className="sticky top-[100px] left-0 z-50 w-full">
+              <CoursePlayer videoUrl={data?.demoUrl} title={data?.title} />
+              <div className="flex items-center">
+                <h1 className="pt-5 text-[25px] text-black dark:text-white">
+                  {data.price === 0 ? "Grátis" : data.price + "$"}
+                </h1>
+                <h5 className="pl-3 text-[20px] mt-2 line-through opacity-80 text-black dark:text-white">
+                  {data.estimatedPrice}$
+                </h5>
 
-      {activeBar === 3 && (
-        <div className="w-full">
-          <h2 className="text-[25px] font-[600] dark:text-white text-black mb-2">
-            Avaliações
-          </h2>
-          {user?._id && !isReviewExists && (
-            <div>
-              <h3 className="text-[20px] font-[600] dark:text-white text-black mb-2">
-                Adicione sua Avaliação
-              </h3>
-              <div className="flex items-center mb-2">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <span
-                    key={index}
-                    className={`cursor-pointer ${
-                      index < rating ? "text-yellow-400" : "text-gray-400"
-                    }`}
-                    onClick={() => setRating(index + 1)}
-                  >
-                    <AiFillStar />
-                  </span>
-                ))}
+                <h4 className="pl-5 pt-4 text-[22px] text-black dark:text-white">
+                  {discountPercentagePrice}% de Desconto
+                </h4>
               </div>
-              <textarea
-                placeholder="Digite sua avaliação..."
-                value={review}
-                onChange={(e) => setReview(e.target.value)}
-                className="w-full py-2 px-4 rounded border border-gray-300 dark:bg-black dark:text-white"
-              />
-              <button
-                className={`${styles.button} py-2 px-4 mt-2`}
-                onClick={handleReviewSubmit}
-              >
-                {reviewCreationLoading ? "Enviando..." : "Enviar Avaliação"}
-              </button>
-            </div>
-          )}
-
-          {course?.reviews?.map((item: any, index: number) => (
-            <div
-              className="bg-gray-200 p-3 rounded my-2 dark:bg-gray-700 dark:text-white"
-              key={index}
-            >
-              <div className="flex items-center mb-2">
-                <Ratings rating={item.rating} />
-                <span className="ml-2 font-semibold">{item.user.name}</span>
-                {item.user.verified && (
-                  <VscVerifiedFilled className="ml-1 text-blue-500" />
+              <div className="flex items-center">
+                {isPurchased ? (
+                  <Link
+                    className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
+                    href={`/course-access/${data._id}`}
+                  >
+                    Acessar Curso
+                  </Link>
+                ) : (
+                  <div
+                    className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
+                    onClick={handleOrder}
+                  >
+                    Comprar Agora {data.price}$
+                  </div>
                 )}
               </div>
-              <p>{item.review}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                {format(item.createdAt)}
+              <br />
+              <p className="pb-1 text-black dark:text-white">
+                • Código fonte incluído
               </p>
-              {user?._id && (
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Digite sua resposta..."
-                    value={reply}
-                    onChange={(e) => setReply(e.target.value)}
-                    className="w-full py-2 px-4 rounded border border-gray-300 dark:bg-black dark:text-white"
-                  />
-                  <button
-                    className={`${styles.button} py-2 px-4 mt-2`}
-                    onClick={() => {
-                      setReviewId(item._id);
-                      setIsReviewReply(true);
-                      handleReviewReplySubmit();
-                    }}
-                  >
-                    {replyCreationLoading
-                      ? "Enviando..."
-                      : "Responder Avaliação"}
-                  </button>
-                </div>
-              )}
+              <p className="pb-1 text-black dark:text-white">
+                • Acesso vitalício completo
+              </p>
+              <p className="pb-1 text-black dark:text-white">
+                • Certificado de conclusão
+              </p>
+              <p className="pb-3 800px:pb-1 text-black dark:text-white">
+                • Suporte Premium
+              </p>
             </div>
-          ))}
+          </div>
         </div>
-      )}
+      </div>
+      <>
+        {open && (
+          <div className="w-full h-screen bg-[#00000036] fixed top-0 left-0 z-50 flex items-center justify-center">
+            <div className="w-[500px] min-h-[500px] bg-white rounded-xl shadow p-3">
+              <div className="w-full flex justify-end">
+                <IoCloseOutline
+                  size={40}
+                  className="text-black cursor-pointer"
+                  onClick={() => setOpen(false)}
+                />
+              </div>
+              <div className="w-full">
+                {stripePromise && clientSecret && (
+                  <Elements stripe={stripePromise} options={{ clientSecret }}>
+                    <CheckOutForm
+                      setOpen={setOpen}
+                      data={data}
+                      user={user}
+                      refetch={refetch}
+                    />
+                  </Elements>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </>
     </div>
   );
 };
 
-export default CourseContentMedia;
+export default CourseDetails;
