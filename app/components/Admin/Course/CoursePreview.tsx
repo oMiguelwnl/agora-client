@@ -60,7 +60,7 @@ const CoursePreview: FC<Props> = ({
           <div
             className={`${styles.button} !w-[180px] my-3 font-Poppins !bg-[crimson] cursor-not-allowed`}
           >
-            Comprar Agora {courseData?.price}$
+            Comprar {courseData?.price}$
           </div>
         </div>
 

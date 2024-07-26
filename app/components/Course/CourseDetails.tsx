@@ -241,7 +241,7 @@ const CourseDetails = ({
                     className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
                     onClick={handleOrder}
                   >
-                    Comprar Agora {data.price}$
+                    Comprar {data.price}$
                   </div>
                 )}
               </div>

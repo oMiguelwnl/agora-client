@@ -94,8 +94,8 @@ const CoursesComponent = () => {
                 className={`${styles.label} justify-center min-h-[50vh] flex items-center`}
               >
                 {search
-                  ? "No courses found!"
-                  : "No courses found in this category. Please try another one!"}
+                  ? "Nenhum curso encontrado!"
+                  : "Nenhum curso encontrado nesta categoria. Por favor, tente outro!"}
               </p>
             )}
             <br />
